@@ -1,0 +1,122 @@
+analog_pin_t myPin = A3 ;
+#define batt_low 401
+const int mainRelay = 1 ;
+const int chargeRelay = 0 ;
+const int sense = 2 ;
+const int led = 4 ;
+
+
+
+void setup() {
+
+  pinMode(sense , INPUT) ;  
+  pinMode(led , OUTPUT) ; 
+  pinMode(mainRelay , OUTPUT) ;
+  pinMode(chargeRelay, OUTPUT) ;
+
+
+  digitalWrite(mainRelay , LOW) ;
+  digitalWrite(chargeRelay , LOW) ;
+  
+}
+
+void loop() {
+
+  int a = digitalRead(sense) ;
+
+  while (a == HIGH ) {
+
+        digitalWrite(mainRelay , HIGH) ;
+        digitalWrite(chargeRelay , LOW) ;
+        digitalWrite(led , HIGH) ;
+        battsense() ;
+
+        delay(500) ;
+       a = digitalRead(sense) ;
+  }
+
+  int b = digitalRead(sense) ;
+
+  if (b == LOW ){
+
+    digitalWrite(led ,LOW) ;
+
+    delay(50) ;
+
+    digitalWrite(led ,HIGH) ;
+    delay(1000) ;
+    digitalWrite(led , LOW) ;
+    delay(1000) ;
+    digitalWrite(led , HIGH) ;
+    delay(1000) ;
+    digitalWrite(led ,LOW) ;
+    delay(1000) ;
+    digitalWrite(led , HIGH) ;
+    delay(1000) ;
+    digitalWrite(led , LOW) ;
+    delay(1000) ;
+
+    digitalWrite(led ,HIGH) ;
+    delay(1000) ;
+    digitalWrite(led , LOW) ;
+    delay(1000) ;
+    digitalWrite(led , HIGH) ;
+    delay(1000) ;
+    digitalWrite(led ,LOW) ;
+    delay(1000) ;
+    digitalWrite(led , HIGH) ;
+    delay(1000) ;
+    digitalWrite(led , LOW) ;
+    delay(1000) ;
+    
+    int c = digitalRead(sense) ;
+
+    if (c == LOW ) { 
+
+      delay(500) ;
+      digitalWrite(mainRelay , LOW) ;
+      delay(2000) ;
+      digitalWrite(chargeRelay , HIGH) ;
+
+      int d = digitalRead(sense) ;
+
+      while( d == LOW ) {
+
+        d = digitalRead(sense) ;
+      }
+
+      digitalWrite(mainRelay , HIGH) ;
+      digitalWrite(chargeRelay , LOW) ;
+      digitalWrite(led , HIGH) ;
+      
+    }
+    
+  }
+}
+
+void battsense(){
+
+  unsigned int batt_volt = analogRead(myPin) ;
+  delay(100) ;
+
+   if(batt_volt < batt_low){
+
+    digitalWrite(led , HIGH) ;
+    delay(200) ;
+    digitalWrite(led , LOW) ;
+    delay(200) ;
+
+    int e = digitalRead(sense) ;
+
+    while (e == HIGH){
+
+    digitalWrite(led , HIGH) ;
+    delay(200) ;
+    digitalWrite(led , LOW) ;
+    delay(200) ;
+    digitalWrite(mainRelay , LOW) ;
+    e = digitalRead(sense) ;
+    }
+   }
+  
+}
